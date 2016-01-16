@@ -18,7 +18,7 @@ function init() {
     scene.add( mesh );
 
     renderer = new THREE.WebGLRenderer();
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize( window.innerWidth/2.5, window.innerHeight/2.5 );
 
     document.body.appendChild( renderer.domElement );
 
