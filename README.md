@@ -1,7 +1,7 @@
 # MrFoldAnyTen.github.io
 The main Homepage for Mr Fold Any Ten
 
-git clone https://github.com/MrFoldAnyTen/MrFoldAnyTen.git
+git clone the repo
 
 cd  MrFoldAnyTen.github.io/
 
