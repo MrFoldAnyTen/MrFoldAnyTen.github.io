@@ -50,12 +50,12 @@ MEHHH   Hello World
 
 				var cube_geometry = new THREE.CubeGeometry(40, 30, 30);
 				var cube_mesh = new THREE.Mesh(cube_geometry);
-				cube_mesh.position.x = -0;
+//				cube_mesh.position.x = -0;
 				var cube_bsp = new ThreeBSP(cube_mesh);
 
 				var sphere_geometry = new THREE.SphereGeometry(20, 32, 32);
 				var sphere_mesh = new THREE.Mesh(sphere_geometry);
-				sphere_mesh.position.x = -0;
+//				sphere_mesh.position.x = -0;
 				var sphere_bsp = new ThreeBSP(sphere_mesh);
 				//var union_bsp = sphere_bsp.union(cube_bsp);
 				//var intersect_bsp = sphere_bsp_1.intersect(sphere_bsp_2);
@@ -85,22 +85,29 @@ MEHHH   Hello World
 					transparent: true,
 					opacity: 0.3
 				}));
-
+				var newSquare = cutShapes(sphere_geometry, cylinder_geometry);
+				scene.add(newSquare);
 				scene.add(CylinderAndSphere);
 
 			})();
 			/////////////////////////////////////////////////////////////////////////////////////////
+
+			function cutShapes(shape1, shape2) {
+//				cut shape1 from shape2 Three geometry
+				var shape1_bsp =new ThreeBSP(shape1);
+				var shape2_bsp =new ThreeBSP(shape2);
+				var cut_bsp = shape1_bsp.subtract(shape2_bsp);
+				var shape = cut_bsp.toMesh(new THREE.MeshLambertMaterial({
+				}))
+			return shape;
+			};
 
 
 			(function render() {
 				cameraControls.update();
 				requestAnimationFrame(render);
 				step += 0.01;
-				var direction = "up";
-//				if (CubeNotSphere.position.y < 20){
-					CubeNotSphere.position.y = 25 * Math.sin(step);
-//				} ;
-//				camera.lookAt(CubeNotSphere.position);
+				CubeNotSphere.position.y = 25 * Math.sin(step);
 				renderer.render(scene, camera);
 			})();
 		}
