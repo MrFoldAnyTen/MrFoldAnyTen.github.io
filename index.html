@@ -5,38 +5,42 @@ MEHHH   Hello World
 <html>
 
 <head>
-	<script type="text/javascript" src="https://rawgit.com/mrdoob/three.js/master/build/three.min.js"></script>
+	<script type="text/javascript" src="js/three.min.js"></script>
 	<script type="text/javascript" src="js/orbitControl.js"></script>
 	<script type="text/javascript" src="js/ThreeCSG.js"></script>
-	<script type="text/javascript" src="window.js"></script>
+
 	<script type="text/javascript">
 		var renderer, scene, camera, light;
+		var step=0;
 
 		window.onload = function() {
-dothis;
+
 			renderer = new THREE.WebGLRenderer({
 				antialias: true
 			});
-			renderer.setSize(window.innerWidth, window.innerHeight);
+			renderer.setSize(window.innerWidth/2, window.innerHeight/2);
 			document.getElementById('viewport').appendChild(renderer.domElement);
 
-			scene = new THREE.Scene();
+			var scene = new THREE.Scene();
 
-			light = new THREE.DirectionalLight(0xffffff);
+			var light = new THREE.DirectionalLight(0x888888);
 			light.position.set(350, 100, 100).normalize();
 			scene.add(light);
 
-			light2 = new THREE.DirectionalLight(0xffffff);
+			var light2 = new THREE.DirectionalLight(0x888888);
 			light2.position.set(-350, 100, 100).normalize();
 			scene.add(light2);
 
+			var light3 = new THREE.AmbientLight( 0x404040 );
+			scene.add( light3 );
+
 			camera = new THREE.PerspectiveCamera(
-				35,
+				35, //frust
 				window.innerWidth / window.innerHeight,
-				1,
-				1000
+				1, //near
+				1000 //far
 			);
-			camera.position.set(20, 10, 200);
+			camera.position.set(100, 75, 50);
 			camera.lookAt(scene.position);
 			scene.add(camera);
 			cameraControls = new THREE.OrbitControls(camera);
@@ -56,12 +60,11 @@ dothis;
 				//var union_bsp = sphere_bsp.union(cube_bsp);
 				//var intersect_bsp = sphere_bsp_1.intersect(sphere_bsp_2);
 				var subtract_bsp = cube_bsp.subtract(sphere_bsp);
-				var result = subtract_bsp.toMesh(new THREE.MeshLambertMaterial({
-//					shading: THREE.SmoothShading,
-//					map: THREE.ImageUtils.loadTexture('wood.png')
+				 CubeNotSphere = subtract_bsp.toMesh(new THREE.MeshLambertMaterial({
+					color: 0xeeddcc
 				}));
-				result.geometry.computeVertexNormals();
-				scene.add(result);
+
+				scene.add(CubeNotSphere);
 
 			})();
 			///////////////////////////////////////////////////////////////////////////////////////
@@ -71,18 +74,19 @@ dothis;
 
 				var sphere_geometry = new THREE.SphereGeometry(19, 16, 16);
 				var sphere_bsp = new ThreeBSP(sphere_geometry);
+				var cylinder_geometry = new THREE.CylinderGeometry(4, 16, 75,32,32);
+				var cylinder_bsp = new ThreeBSP(cylinder_geometry);
 
-				var cube_geometry = new THREE.CylinderGeometry(4, 16, 75,32,32);
-				var cube_bsp = new ThreeBSP(cube_geometry);
+				var union_bsp = sphere_bsp.union(cylinder_bsp);
 
-				var union_bsp = sphere_bsp.union(cube_bsp);
+				var CylinderAndSphere = union_bsp.toMesh(new THREE.MeshLambertMaterial({
 
-				var result = union_bsp.toMesh(new THREE.MeshLambertMaterial({
-//					shading: THREE.SmoothShading,
-//					map: THREE.ImageUtils.loadTexture('texture.png')
+					color: 0xccddee,
+					transparent: true,
+					opacity: 0.3
 				}));
-				result.geometry.computeVertexNormals();
-				scene.add(result);
+
+				scene.add(CylinderAndSphere);
 
 			})();
 			/////////////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +95,12 @@ dothis;
 			(function render() {
 				cameraControls.update();
 				requestAnimationFrame(render);
+				step += 0.01;
+				var direction = "up";
+//				if (CubeNotSphere.position.y < 20){
+					CubeNotSphere.position.y = 25 * Math.sin(step);
+//				} ;
+//				camera.lookAt(CubeNotSphere.position);
 				renderer.render(scene, camera);
 			})();
 		}
