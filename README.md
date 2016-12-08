@@ -5,6 +5,11 @@ git clone the repo
 
 cd  MrFoldAnyTen.github.io/
 
+  Do the editing
+  procrastinate
+  etc
+
+
 git add -A
 
 git commit -m "another attempt at updating  "
